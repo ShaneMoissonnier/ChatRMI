@@ -1,5 +1,7 @@
 package chatRMI.server;
 
+import chatRMI.remoteInterfaces.ChatService;
+
 import java.rmi.AlreadyBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,7 +22,8 @@ public class Server {
     }
 
     Server() {
-        // bind services
+        ChatService chatService = new ChatServiceImpl();
+        this.bindService(chatService, "chatService");
     }
 
     public static void main(String[] args) {

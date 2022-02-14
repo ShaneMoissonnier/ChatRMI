@@ -1,5 +1,8 @@
 package chatRMI.client;
 
+import chatRMI.remoteInterfaces.ChatService;
+import chatRMI.remoteInterfaces.ClientInfo;
+
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -20,16 +23,26 @@ public class Client {
         return null;
     }
 
-    Client(String host) {
+    Client(String host, String name) {
         this.host = host;
+
+        ClientInfo clientInfo = new ClientInfoImpl(name);
+
+        ChatService chatService = (ChatService) this.lookUpService("chatService");
+        try {
+            chatService.login(clientInfo);
+            Thread.sleep(2000);
+        } catch (RemoteException | InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) {
-        if (args.length != 1) {
-            System.out.println("Usage: java Client <rmiregistry host>");
+        if (args.length != 2) {
+            System.out.println("Usage: java Client <rmiregistry host> <username>");
             return;
         }
 
-        new Client(args[0]);
+        new Client(args[0], args[1]);
     }
 }
