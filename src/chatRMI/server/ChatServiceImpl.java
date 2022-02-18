@@ -3,13 +3,14 @@ package chatRMI.server;
 import chatRMI.remoteInterfaces.ChatService;
 import chatRMI.remoteInterfaces.ClientInfo;
 
-import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Logger;
 
 public class ChatServiceImpl extends UnicastRemoteObject implements ChatService {
+    private static final Logger logger = Logger.getLogger("chatServer");
     private final List<ClientInfo> clientInfos;
 
     public ChatServiceImpl() throws RemoteException {
@@ -17,59 +18,66 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
         this.clientInfos = new Vector<>();
     }
 
+    /**
+     * Called when a client tries to log into the server.
+     *
+     * @param client The client trying to log in
+     */
     @Override
-    public synchronized void login(ClientInfo client) {
-        try {
-            if (clientInfos.stream().anyMatch(c -> {
-                try {
-                    return c.getName().equals(client.getName());
-                } catch(RemoteException e)
-                {
-                    e.printStackTrace();
-                }
-                return false;
-            })) {
-                client.loginCallback(false);
-            } else {
-                this.clientInfos.add(client);
-                System.out.println("Client " + client.getName() + " logged in");
-                client.loginCallback(true);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public synchronized void logout(ClientInfo client) {
-        try {
-            if (clientInfos.stream().anyMatch(c -> {
-                try {
-                    return c.getName().equals(client.getName());
-                } catch (RemoteException e)
-                {
-                    e.printStackTrace();
-                }
-                return false;
-            })) {
-                this.clientInfos.remove(client);
-                client.logoutCallback(true);
-            } else {
-                client.logoutCallback(false);
-            }
-        } catch (RemoteException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public synchronized void sendMessage(ClientInfo client, String message) {
-        try {
+    public synchronized void login(ClientInfo client) throws RemoteException {
+        if (clientInfos.contains(client)) {
+            /* A client can only be logged in once */
+            client.loginCallback(false);
+        } else {
+            /* We notify the other clients that someone joined */
             for (ClientInfo c : this.clientInfos) {
-                c.messageReceivedCallback(client, message);
+                c.otherLoginCallback(client);
             }
-        } catch (RemoteException e) {
-            e.printStackTrace();
+
+            /* We log the client in */
+            this.clientInfos.add(client);
+            logger.info("Client " + client.getName() + " logged in");
+            client.loginCallback(true);
+        }
+    }
+
+    /**
+     * Called when a client tries to log out of the server
+     *
+     * @param client The client trying to log out
+     */
+    @Override
+    public synchronized void logout(ClientInfo client) throws RemoteException {
+        if (!clientInfos.contains(client)) {
+            /* A client can only log out if they are logged in */
+            client.logoutCallback(false);
+        } else {
+            /* We log the client out */
+            this.clientInfos.remove(client);
+
+            /* We notify the other clients that someone left */
+            for (ClientInfo c : this.clientInfos) {
+                c.otherLogoutCallback(client);
+            }
+
+            logger.info("Client " + client.getName() + " logged out");
+            client.logoutCallback(true);
+        }
+    }
+
+    /**
+     * Called when a client tries to send a message
+     *
+     * @param client  The client sending the message
+     * @param message The message
+     */
+    @Override
+    public synchronized void sendMessage(ClientInfo client, String message) throws RemoteException {
+        /* We log the message in the server's console */
+        System.out.println(client.getName() + " : " + message);
+        /* We send the message to every client */
+        for (ClientInfo c : this.clientInfos) {
+            c.messageReceivedCallback(client, message);
         }
     }
 }
