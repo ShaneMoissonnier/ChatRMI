@@ -3,6 +3,8 @@ package chatRMI.client;
 import chatRMI.remoteInterfaces.ChatService;
 import chatRMI.remoteInterfaces.ClientInfo;
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -23,12 +25,12 @@ public class Client {
         return null;
     }
 
-    Client(String host, String name) {
+    Client(String host, String name) throws MalformedURLException, NotBoundException, RemoteException {
         this.host = host;
 
         ClientInfo clientInfo = new ClientInfoImpl(name);
 
-        ChatService chatService = (ChatService) this.lookUpService("chatService");
+        ChatService chatService = (ChatService) Naming.lookup("chatService");
         try {
             chatService.login(clientInfo);
             Thread.sleep(2000);
@@ -37,7 +39,7 @@ public class Client {
         }
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException, NotBoundException, RemoteException {
         if (args.length != 2) {
             System.out.println("Usage: java Client <rmiregistry host> <username>");
             return;

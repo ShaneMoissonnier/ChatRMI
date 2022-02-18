@@ -3,21 +3,32 @@ package chatRMI.server;
 import chatRMI.remoteInterfaces.ChatService;
 import chatRMI.remoteInterfaces.ClientInfo;
 
+import java.io.Serializable;
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.Vector;
 
-public class ChatServiceImpl implements ChatService {
+public class ChatServiceImpl extends UnicastRemoteObject implements ChatService {
     private final List<ClientInfo> clientInfos;
 
-    public ChatServiceImpl() {
+    public ChatServiceImpl() throws RemoteException {
+        super();
         this.clientInfos = new Vector<>();
     }
 
     @Override
-    public void login(ClientInfo client) {
+    public synchronized void login(ClientInfo client) {
         try {
-            if (clientInfos.stream().anyMatch(c -> c.getName().equals(client.getName()))) {
+            if (clientInfos.stream().anyMatch(c -> {
+                try {
+                    return c.getName().equals(client.getName());
+                } catch(RemoteException e)
+                {
+                    e.printStackTrace();
+                }
+                return false;
+            })) {
                 client.loginCallback(false);
             } else {
                 this.clientInfos.add(client);
@@ -30,9 +41,17 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void logout(ClientInfo client) {
+    public synchronized void logout(ClientInfo client) {
         try {
-            if (clientInfos.stream().anyMatch(c -> c.getName().equals(client.getName()))) {
+            if (clientInfos.stream().anyMatch(c -> {
+                try {
+                    return c.getName().equals(client.getName());
+                } catch (RemoteException e)
+                {
+                    e.printStackTrace();
+                }
+                return false;
+            })) {
                 this.clientInfos.remove(client);
                 client.logoutCallback(true);
             } else {
@@ -44,7 +63,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public void sendMessage(ClientInfo client, String message) {
+    public synchronized void sendMessage(ClientInfo client, String message) {
         try {
             for (ClientInfo c : this.clientInfos) {
                 c.messageReceivedCallback(client, message);

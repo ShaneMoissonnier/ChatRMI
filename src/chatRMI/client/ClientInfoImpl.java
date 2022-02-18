@@ -2,11 +2,13 @@ package chatRMI.client;
 
 import chatRMI.remoteInterfaces.ClientInfo;
 
-public class ClientInfoImpl implements ClientInfo {
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
+
+public class ClientInfoImpl extends UnicastRemoteObject implements ClientInfo {
     private final String name;
 
-    public ClientInfoImpl(String name) {
-        super();
+    public ClientInfoImpl(String name) throws RemoteException {
         this.name = name;
     }
 
@@ -22,7 +24,11 @@ public class ClientInfoImpl implements ClientInfo {
 
     @Override
     public void messageReceivedCallback(ClientInfo client, String message) {
-        System.out.println(client.getName() + " : " + message);
+        try {
+            System.out.println(client.getName() + " : " + message);
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

@@ -2,7 +2,9 @@ package chatRMI.server;
 
 import chatRMI.remoteInterfaces.ChatService;
 
+import java.net.MalformedURLException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.Naming;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -21,12 +23,14 @@ public class Server {
         }
     }
 
-    Server() {
+    Server() throws MalformedURLException, RemoteException {
+        System.out.println("Init Server");
         ChatService chatService = new ChatServiceImpl();
-        this.bindService(chatService, "chatService");
+        Naming.rebind("chatService", chatService);
+        System.out.println("Server ready");
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws MalformedURLException, RemoteException {
         new Server();
     }
 }

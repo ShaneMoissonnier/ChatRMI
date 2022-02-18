@@ -9,5 +9,5 @@ public interface ClientInfo extends Remote, Serializable {
     void messageReceivedCallback(ClientInfo client, String message) throws RemoteException; // Called everytime we receive a message
     void logoutCallback(boolean status) throws RemoteException; // Called once, whe we log out
 
-    String getName();
+    String getName() throws RemoteException;
 }
