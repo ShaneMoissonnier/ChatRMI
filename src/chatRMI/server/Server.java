@@ -3,16 +3,19 @@ package chatRMI.server;
 import chatRMI.common.MyLogManager;
 import chatRMI.remoteInterfaces.ChatService;
 
+import java.io.*;
 import java.rmi.*;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class Server {
     private static Logger logger;
     private ChatService chatService;
 
+    private final String HISTORY_PATH = System.getProperty("user.home") + "/.chat/history";
     /**
      * Sets up everything so that the logger will function properly in every case
      */
@@ -61,12 +64,14 @@ public class Server {
     /**
      * This method boots the server
      */
-    private void boot() throws RemoteException {
+    private void boot() throws IOException, ClassNotFoundException {
         this.setupLoggingProperties();
         logger.info("Initializing Server...");
 
         this.chatService = new ChatServiceImpl();
         this.bindService(chatService, "chatService");
+
+        this.loadHistory();
 
         logger.info("Server ready");
     }
@@ -81,16 +86,56 @@ public class Server {
         this.unbindService(chatService, "chatService");
         logger.info("Shutdown complete");
 
+        // save all messages in history
+        try {
+            this.saveHistory();
+        } catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
         MyLogManager.resetFinally();
     }
 
-    Server() throws RemoteException {
+    private void saveHistory() throws IOException {
+        File historyFile = new File(HISTORY_PATH);
+
+        historyFile.createNewFile(); // if file already exists will do nothing
+        FileOutputStream oFile = new FileOutputStream(historyFile, false);
+
+        ObjectOutputStream oOutStream = new ObjectOutputStream(oFile);
+
+        oOutStream.writeObject(chatService.getMessageList());
+        oOutStream.flush();
+        oOutStream.close();
+    }
+
+    private void loadHistory() throws IOException, ClassNotFoundException {
+        File historyFile = new File(HISTORY_PATH);
+
+        if ( ! historyFile.exists())
+            return;
+
+        FileInputStream iFile = new FileInputStream(historyFile);
+        ObjectInputStream oInputStream = new ObjectInputStream(iFile);
+
+        List<Message> messageList = (List<Message>) oInputStream.readObject();
+
+        if (messageList == null) {
+            logger.severe("Empty history file");
+            return;
+        }
+
+        chatService.setMessageList(messageList);
+    }
+
+    Server() throws IOException, ClassNotFoundException {
         this.boot();
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutDown));
     }
 
-    public static void main(String[] args) throws RemoteException {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         new Server();
     }
 }

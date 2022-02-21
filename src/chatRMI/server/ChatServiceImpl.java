@@ -3,6 +3,7 @@ package chatRMI.server;
 import chatRMI.remoteInterfaces.ChatService;
 import chatRMI.remoteInterfaces.ClientInfo;
 
+import javax.swing.text.BadLocationException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -11,11 +12,14 @@ import java.util.logging.Logger;
 
 public class ChatServiceImpl extends UnicastRemoteObject implements ChatService {
     private static final Logger logger = Logger.getLogger("chatServer");
+
     private final List<ClientInfo> clientInfos;
+    private List<Message> messageList;
 
     public ChatServiceImpl() throws RemoteException {
         super();
         this.clientInfos = new Vector<>();
+        this.messageList = new Vector<>();
     }
 
     /**
@@ -72,12 +76,39 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
      * @param message The message
      */
     @Override
-    public synchronized void sendMessage(ClientInfo client, String message) throws RemoteException {
+    public synchronized void sendMessage(ClientInfo client, String message) throws RemoteException, BadLocationException {
+
+        String clientName = client.getName();
+
         /* We log the message in the server's console */
-        System.out.println(client.getName() + " : " + message);
+        System.out.println(clientName + " : " + message);
+
+        /* We add the message to the list of messages */
+        Message newMessage = new Message(message, clientName);
+        messageList.add(newMessage);
+
         /* We send the message to every client */
         for (ClientInfo c : this.clientInfos) {
-            c.messageReceivedCallback(client, message);
+            c.messageReceivedCallback(newMessage);
         }
+    }
+
+    /**
+     * Called when a client attempts to retrieve messages from users.
+     *
+     * @return list of messages
+     */
+    @Override
+    public List<Message> getMessageList() throws RemoteException {
+        return this.messageList;
+    }
+
+    /**
+     * Used to update message list
+     */
+    @Override
+    public void setMessageList(List<Message> messages) throws RemoteException
+    {
+        this.messageList = messages;
     }
 }

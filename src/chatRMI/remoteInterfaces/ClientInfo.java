@@ -1,5 +1,8 @@
 package chatRMI.remoteInterfaces;
 
+import chatRMI.server.Message;
+
+import javax.swing.text.BadLocationException;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -42,10 +45,9 @@ public interface ClientInfo extends Remote, Serializable {
     /**
      * Called when someone (self included) sends a message to the server.
      *
-     * @param client  The sender of the message
      * @param message The message
      */
-    void messageReceivedCallback(ClientInfo client, String message) throws RemoteException;
+    void messageReceivedCallback(Message message) throws RemoteException, BadLocationException;
 
     String getName() throws RemoteException;
 }
