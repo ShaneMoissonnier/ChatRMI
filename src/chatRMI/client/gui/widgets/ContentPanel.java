@@ -1,6 +1,9 @@
 package chatRMI.client.gui.widgets;
 
+import chatRMI.client.Client;
+
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import javax.swing.text.SimpleAttributeSet;
@@ -10,7 +13,7 @@ public class ContentPanel extends JPanel {
 
     private static JTextPane textArea = null;
 
-    public ContentPanel()
+    public ContentPanel(Client client)
     {
         BorderLayout layout = new BorderLayout();
         this.setLayout(layout);
@@ -19,11 +22,12 @@ public class ContentPanel extends JPanel {
         this.add(textArea, BorderLayout.CENTER);
         textArea.setEditable(false);
         textArea.setFocusable(false);
+        textArea.setMargin(new Insets(20, 20, 20, 20));
 
         JScrollPane scrollPane = new JScrollPane(textArea);
 
         this.add(scrollPane, BorderLayout.CENTER);
-        this.add(new SendMessageBar(), BorderLayout.SOUTH);
+        this.add(new SendMessageBar(client), BorderLayout.SOUTH);
     }
 
     public static void addMessage(String message) throws BadLocationException {

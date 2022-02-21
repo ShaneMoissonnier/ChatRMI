@@ -71,14 +71,14 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
     /**
      * Used to log into the server
      */
-    private void login() throws RemoteException {
+    public void login() throws RemoteException {
         this.chatService.login(this);
     }
 
     /**
      * Used to log out of the server
      */
-    private void logout() throws RemoteException {
+    public void logout() throws RemoteException {
         this.chatService.logout(this);
     }
 
@@ -112,6 +112,8 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
         this.name = name;
 
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutDown));
+
+        this.initClient();
     }
 
     /**
@@ -119,7 +121,6 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
      */
     public void initClient() throws RemoteException{
         this.setupRemoteObjects(name);
-        this.login();
     }
 
     /**
@@ -129,7 +130,6 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
      */
     public void setGui(ClientGUI gui) throws RemoteException {
         this.clientGUI = gui;
-        this.initClient();
     }
 
     public static void main(String[] args) throws RemoteException, BadLocationException {
@@ -139,6 +139,7 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
         }
 
         Client client = new Client(args[0], args[1]);
+
         ClientGUI gui = new ClientGUI("Chat Application", client);
 
         // Launch Client GUI
@@ -160,7 +161,6 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
             logger.info("Login successful");
         } else {
             logger.severe("Error");
-            System.exit(1);
         }
     }
 
@@ -181,7 +181,7 @@ public class Client extends UnicastRemoteObject implements ClientInfo {
      */
     @Override
     public void messageReceivedCallback(Message message) throws RemoteException, BadLocationException {
-        clientGUI.addChatMessage(message.getContent());
+        clientGUI.addChatMessage(message.getAuthor() + " : " + message.getContent() + "\n");
     }
 
     /**

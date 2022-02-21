@@ -21,14 +21,14 @@ public class ClientGUI extends JFrame {
         FlatAtomOneDarkContrastIJTheme.setup();
 
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(1024, 760));
+        setPreferredSize(new Dimension(1256, 860));
 
         UIDefaults def = UIManager.getLookAndFeelDefaults();
 
         this.m_client = client;
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SideBar(), new ContentPanel());
-        splitPane.setDividerLocation(150);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SideBar(m_client), new ContentPanel(m_client));
+        splitPane.setDividerLocation(250);
         this.add(splitPane);
 
         this.setJMenuBar(new MenuBar());

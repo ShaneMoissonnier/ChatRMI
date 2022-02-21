@@ -1,21 +1,32 @@
 package chatRMI.client.gui.widgets;
 
+import chatRMI.client.Client;
+
 import javax.swing.*;
 import java.awt.*;
 
 public class SendMessageBar extends JPanel{
 
-    public SendMessageBar() {
+    JTextField m_sendBar;
+
+    public SendMessageBar(Client client) {
         BorderLayout border_layout = new BorderLayout();
         setLayout(border_layout);
 
-        JTextField barre_recherche = new JTextField();
-        barre_recherche.putClientProperty("JTextField.placeholderText", " Votre message ici...");
-        barre_recherche.setFont(new Font(barre_recherche.getFont().getName(), Font.PLAIN, 20));
+        JTextField sendBar = new JTextField();
+        sendBar.putClientProperty("JTextField.placeholderText", " Votre message ici...");
+        sendBar.setFont(new Font(sendBar.getFont().getName(), Font.PLAIN, 20));
+
+        this.m_sendBar = sendBar;
 
         setPreferredSize(new Dimension(getWidth(), 60));
 
-        add(barre_recherche, BorderLayout.CENTER);
-        add(new SearchButtons(this), BorderLayout.EAST);
+        add(sendBar, BorderLayout.CENTER);
+        add(new SendButtons(this, client), BorderLayout.EAST);
+    }
+
+    public String getSendBarText()
+    {
+        return this.m_sendBar.getText();
     }
 }
