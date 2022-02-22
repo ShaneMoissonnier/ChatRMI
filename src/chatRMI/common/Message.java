@@ -1,4 +1,4 @@
-package chatRMI.server;
+package chatRMI.common;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -9,8 +9,7 @@ public class Message implements Serializable {
     private final String m_content;
     private Date m_date;
 
-    public Message(String content, String author)
-    {
+    public Message(String content, String author) {
         this.m_content = content;
         this.m_author = author;
     }
@@ -23,8 +22,7 @@ public class Message implements Serializable {
     /**
      * Used to retrieve the message's author
      */
-    public String getAuthor()
-    {
+    public String getAuthor() {
         return this.m_author;
     }
 
@@ -40,5 +38,10 @@ public class Message implements Serializable {
      */
     public Date getDate() {
         return this.m_date;
+    }
+
+    @Override
+    public String toString() {
+        return this.getAuthor() + " : " + this.getContent();
     }
 }

@@ -1,8 +1,7 @@
 package chatRMI.remoteInterfaces;
 
-import chatRMI.server.Message;
+import chatRMI.common.Message;
 
-import javax.swing.text.BadLocationException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -29,10 +28,9 @@ public interface ChatService extends Remote {
     /**
      * Called when a client tries to send a message
      *
-     * @param client  The client sending the message
      * @param message The message
      */
-    void sendMessage(ClientInfo client, String message) throws RemoteException, BadLocationException;
+    void sendMessage(Message message) throws RemoteException;
 
     /**
      * Called when a client attempts to retrieve messages from users.
@@ -40,4 +38,6 @@ public interface ChatService extends Remote {
     List<Message> getMessageList() throws RemoteException;
 
     void setMessageList(List<Message> messages) throws RemoteException;
+
+    List<ClientInfo> getLoggedInClients() throws RemoteException;
 }

@@ -1,44 +1,76 @@
 package chatRMI.client.gui;
 
-import chatRMI.client.Client;
+import chatRMI.client.fc.ClientAbstract;
+import chatRMI.client.gui.widgets.ConnectionButtons;
 import chatRMI.client.gui.widgets.ContentPanel;
-import chatRMI.client.gui.widgets.MenuBar;
 import chatRMI.client.gui.widgets.SideBar;
-import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatAtomOneDarkContrastIJTheme;
+import chatRMI.common.Message;
+import chatRMI.remoteInterfaces.ClientInfo;
 
-import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import java.awt.*;
 import java.rmi.RemoteException;
+import java.util.List;
 
-public class ClientGUI extends JFrame {
+public class ClientGUI extends ClientAbstract {
+    private boolean logged_in;
 
-    private Client m_client;
+    public ClientGUI(String host, String name) throws RemoteException {
+        super(host, name);
 
-    public ClientGUI(String title, Client client) throws RemoteException {
-        super(title);
-
-        FlatAtomOneDarkContrastIJTheme.setup();
-
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setPreferredSize(new Dimension(1256, 860));
-
-        UIDefaults def = UIManager.getLookAndFeelDefaults();
-
-        this.m_client = client;
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new SideBar(m_client), new ContentPanel(m_client));
-        splitPane.setDividerLocation(250);
-        this.add(splitPane);
-
-        this.setJMenuBar(new MenuBar());
-
-        client.setGui(this);
-
-        pack();
+        logged_in = false;
     }
 
-    public void addChatMessage(String message) throws BadLocationException {
+    @Override
+    protected void shutDown() throws RemoteException {
+        if (logged_in) {
+            this.logout();
+        }
+    }
+
+    @Override
+    protected void loadHistory(List<Message> history) throws RemoteException {
+        for (Message m : history) {
+            ContentPanel.addMessage(m);
+        }
+    }
+
+    @Override
+    public void loginCallback(boolean status, List<Message> history) throws RemoteException {
+        super.loginCallback(status, history);
+
+        if (status) {
+            this.logged_in = true;
+            SideBar.onSelfLogin(this.chatService.getLoggedInClients());
+            ConnectionButtons.setLoggedIn();
+        }
+    }
+
+    @Override
+    public void otherLoginCallback(ClientInfo other) throws RemoteException {
+        super.otherLoginCallback(other);
+        SideBar.onOtherLogin(other);
+    }
+
+    @Override
+    public void logoutCallback(boolean status) throws RemoteException {
+        super.logoutCallback(status);
+
+        if (status) {
+            this.logged_in = false;
+            ContentPanel.onDisconnect();
+            SideBar.onSelfLogout();
+            ConnectionButtons.setLoggedOut();
+        }
+    }
+
+    @Override
+    public void otherLogoutCallback(ClientInfo other) throws RemoteException {
+        super.otherLogoutCallback(other);
+        SideBar.onOtherLogout(other);
+    }
+
+    @Override
+    public void messageReceivedCallback(Message message) throws RemoteException {
+        super.messageReceivedCallback(message);
         ContentPanel.addMessage(message);
     }
 }

@@ -30,6 +30,8 @@ public class MyLogManager extends LogManager {
 
     public static void resetFinally() {
         /* This method is here to allow a static access */
-        instance.reset0();
+        if (instance != null) {
+            instance.reset0();
+        }
     }
 }

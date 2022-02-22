@@ -1,11 +1,11 @@
 package chatRMI.remoteInterfaces;
 
-import chatRMI.server.Message;
+import chatRMI.common.Message;
 
-import javax.swing.text.BadLocationException;
 import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * The remote interface the client offers to the server.
@@ -19,7 +19,7 @@ public interface ClientInfo extends Remote, Serializable {
      *
      * @param status Whether the login is successful or not
      */
-    void loginCallback(boolean status) throws RemoteException;
+    void loginCallback(boolean status, List<Message> history) throws RemoteException;
 
     /**
      * Called when someone else joins the server
@@ -47,7 +47,7 @@ public interface ClientInfo extends Remote, Serializable {
      *
      * @param message The message
      */
-    void messageReceivedCallback(Message message) throws RemoteException, BadLocationException;
+    void messageReceivedCallback(Message message) throws RemoteException;
 
     String getName() throws RemoteException;
 }

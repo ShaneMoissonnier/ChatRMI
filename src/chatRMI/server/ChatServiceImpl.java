@@ -1,9 +1,9 @@
 package chatRMI.server;
 
+import chatRMI.common.Message;
 import chatRMI.remoteInterfaces.ChatService;
 import chatRMI.remoteInterfaces.ClientInfo;
 
-import javax.swing.text.BadLocationException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -31,7 +31,7 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
     public synchronized void login(ClientInfo client) throws RemoteException {
         if (clientInfos.contains(client)) {
             /* A client can only be logged in once */
-            client.loginCallback(false);
+            client.loginCallback(false, null);
         } else {
             /* We notify the other clients that someone joined */
             for (ClientInfo c : this.clientInfos) {
@@ -41,7 +41,7 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
             /* We log the client in */
             this.clientInfos.add(client);
             logger.info("Client " + client.getName() + " logged in");
-            client.loginCallback(true);
+            client.loginCallback(true, messageList);
         }
     }
 
@@ -72,24 +72,19 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
     /**
      * Called when a client tries to send a message
      *
-     * @param client  The client sending the message
      * @param message The message
      */
     @Override
-    public synchronized void sendMessage(ClientInfo client, String message) throws RemoteException, BadLocationException {
-
-        String clientName = client.getName();
-
+    public synchronized void sendMessage(Message message) throws RemoteException {
         /* We log the message in the server's console */
-        System.out.println(clientName + " : " + message);
+        System.out.println(message);
 
         /* We add the message to the list of messages */
-        Message newMessage = new Message(message, clientName);
-        messageList.add(newMessage);
+        messageList.add(message);
 
         /* We send the message to every client */
         for (ClientInfo c : this.clientInfos) {
-            c.messageReceivedCallback(newMessage);
+            c.messageReceivedCallback(message);
         }
     }
 
@@ -107,8 +102,12 @@ public class ChatServiceImpl extends UnicastRemoteObject implements ChatService 
      * Used to update message list
      */
     @Override
-    public void setMessageList(List<Message> messages) throws RemoteException
-    {
+    public void setMessageList(List<Message> messages) throws RemoteException {
         this.messageList = messages;
+    }
+
+    @Override
+    public List<ClientInfo> getLoggedInClients() throws RemoteException {
+        return clientInfos;
     }
 }
