@@ -5,9 +5,10 @@ import chatRMI.common.Message;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
+import java.io.IOException;
 
 public class ContentPanel extends JPanel {
     private static final JTextPane textArea = new JTextPane();
@@ -17,6 +18,7 @@ public class ContentPanel extends JPanel {
         textArea.setEditable(false);
         textArea.setFocusable(false);
         textArea.setMargin(new Insets(20, 20, 20, 20));
+        textArea.setContentType("text/html");
     }
 
     private void setupScrollPane(ClientGUI client) {
@@ -34,11 +36,13 @@ public class ContentPanel extends JPanel {
 
     public static void addMessage(Message message) {
         try {
-            Document document = textArea.getDocument();
-            int documentLength = document.getLength();
-            document.insertString(documentLength, message.toString() + "\n", new SimpleAttributeSet());
-            textArea.setCaretPosition(documentLength);
+            HTMLDocument document = (HTMLDocument)textArea.getDocument();
+            HTMLEditorKit editorKit = (HTMLEditorKit)textArea.getEditorKit();
+            editorKit.insertHTML(document, document.getLength(), message.toString() + "\n",0, 0, null);
+            textArea.setCaretPosition(document.getLength());
         } catch (BadLocationException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }

@@ -32,23 +32,27 @@ public class SendMessageBar extends JPanel{
             @Override
             public void actionPerformed(ActionEvent event) {
                 try {
-                    if ( ! client.isLoggedIn()) {
-                        ContentPanel.addMessage(new Message("Connectez vous pour envoyer un message !", "Application"));
-                        return;
-                    }
-
-                    if (getSendBarText().isEmpty())
-                        return;
-
-                    Message message = new Message(getSendBarText(), client.getName());
-                    client.sendMessage(message);
-                    clearText();
-
+                    sendMessage(client);
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }
             }
         };
+    }
+
+    public void sendMessage(ClientGUI client) throws RemoteException
+    {
+        if ( ! client.isLoggedIn()) {
+            ContentPanel.addMessage(new Message("Connectez vous pour envoyer un message !", "Application", Message.MessageType.APPLICATION));
+            return;
+        }
+
+        if (getSendBarText().isEmpty())
+            return;
+
+        Message message = new Message(getSendBarText(), client.getName());
+        client.sendMessage(message);
+        clearText();
     }
 
     public Action getTextFieldEnterAction() {

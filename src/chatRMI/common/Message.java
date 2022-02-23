@@ -5,18 +5,31 @@ import java.util.Date;
 
 public class Message implements Serializable {
 
+    public enum MessageType {
+        APPLICATION,
+        ERROR,
+        USER
+    }
+
     private final String m_author;
     private final String m_content;
     private Date m_date;
+    private MessageType m_messageType;
 
     public Message(String content, String author) {
         this.m_content = content;
         this.m_author = author;
+        this.m_messageType = MessageType.USER;
     }
 
     public Message(String content, String author, Date date) {
         this(content, author);
         this.m_date = date;
+    }
+
+    public Message(String content, String author, MessageType messageType) {
+        this(content, author);
+        this.m_messageType = messageType;
     }
 
     /**
@@ -42,6 +55,13 @@ public class Message implements Serializable {
 
     @Override
     public String toString() {
-        return this.getAuthor() + " : " + this.getContent();
+        String message;
+
+        switch (this.m_messageType){
+            case APPLICATION -> message = "<b style=\"color:#bce6bf;\">[ " + this.getAuthor() + " ]</b> : " + this.getContent();
+            case ERROR -> message = "<b style=\"color:red;\">" + this.getAuthor() + "</b> : " + this.getContent();
+            default -> message = "<b>" + this.getAuthor() + "</b> : " + this.getContent();
+        }
+        return message;
     }
 }

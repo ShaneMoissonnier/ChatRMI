@@ -11,17 +11,16 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 public class ClientGUI extends ClientAbstract {
-    private boolean logged_in;
+    private boolean loggedIn;
 
     public ClientGUI(String host, String name) throws RemoteException {
         super(host, name);
-
-        logged_in = false;
+        loggedIn = false;
     }
 
     @Override
     protected void shutDown() throws RemoteException {
-        if (logged_in) {
+        if (loggedIn) {
             this.logout();
         }
     }
@@ -35,7 +34,7 @@ public class ClientGUI extends ClientAbstract {
 
     @Override
     public boolean isLoggedIn() throws RemoteException {
-        return logged_in;
+        return loggedIn;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class ClientGUI extends ClientAbstract {
         super.loginCallback(status, history);
 
         if (status) {
-            this.logged_in = true;
+            this.loggedIn = true;
             SideBar.onSelfLogin(this.chatService.getLoggedInClients());
             ConnectionButtons.setLoggedIn();
         }
@@ -60,7 +59,7 @@ public class ClientGUI extends ClientAbstract {
         super.logoutCallback(status);
 
         if (status) {
-            this.logged_in = false;
+            this.loggedIn = false;
             ContentPanel.onDisconnect();
             SideBar.onSelfLogout();
             ConnectionButtons.setLoggedOut();
