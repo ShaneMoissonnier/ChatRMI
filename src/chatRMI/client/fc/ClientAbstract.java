@@ -19,7 +19,7 @@ public abstract class ClientAbstract extends UnicastRemoteObject implements Clie
     private static Logger logger;
 
     private final String host;
-    private final String name;
+    private String name;
 
     protected ChatService chatService;
 
@@ -182,4 +182,7 @@ public abstract class ClientAbstract extends UnicastRemoteObject implements Clie
     public String getName() {
         return this.name;
     }
+
+    @Override
+    public void setName(String name) throws RemoteException { this.name = name; }
 }

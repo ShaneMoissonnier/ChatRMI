@@ -20,8 +20,11 @@ public class ConnectionButtons extends JPanel {
         this.add(connectButton);
         this.add(disconnectButton);
 
+        // TODO: make a function for each button's event
         connectButton.addActionListener(e -> {
             try {
+                String nickname = JOptionPane.showInputDialog("Choisir un pseudo : ");
+                client.setName(nickname);
                 client.login();
             } catch (RemoteException ex) {
                 ex.printStackTrace();

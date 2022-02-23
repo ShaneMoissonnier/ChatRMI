@@ -50,4 +50,6 @@ public interface ClientInfo extends Remote, Serializable {
     void messageReceivedCallback(Message message) throws RemoteException;
 
     String getName() throws RemoteException;
+
+    void setName(String name) throws RemoteException;
 }
