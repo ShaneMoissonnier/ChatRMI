@@ -8,8 +8,12 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ClientConsole extends ClientAbstract implements Runnable {
+    private boolean logged_in;
+
     public ClientConsole(String host, String name) throws RemoteException {
         super(host, name);
+
+        logged_in = false;
 
         this.login();
         this.run();
@@ -48,5 +52,10 @@ public class ClientConsole extends ClientAbstract implements Runnable {
                 }
             }
         }
+    }
+
+    @Override
+    public boolean isLoggedIn() throws RemoteException {
+        return logged_in;
     }
 }

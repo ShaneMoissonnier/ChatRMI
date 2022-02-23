@@ -1,6 +1,5 @@
 package chatRMI.client.gui.widgets;
 
-import chatRMI.client.Client;
 import chatRMI.client.gui.ClientGUI;
 import chatRMI.common.Message;
 
@@ -33,9 +32,18 @@ public class SendMessageBar extends JPanel{
             @Override
             public void actionPerformed(ActionEvent event) {
                 try {
+                    if ( ! client.isLoggedIn()) {
+                        ContentPanel.addMessage(new Message("Connectez vous pour envoyer un message !", "Application"));
+                        return;
+                    }
+
+                    if (getSendBarText().isEmpty())
+                        return;
+
                     Message message = new Message(getSendBarText(), client.getName());
                     client.sendMessage(message);
                     clearText();
+
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

@@ -112,6 +112,8 @@ public abstract class ClientAbstract extends UnicastRemoteObject implements Clie
 
     protected abstract void loadHistory(List<Message> history) throws RemoteException;
 
+    public abstract boolean isLoggedIn() throws RemoteException;
+
     /* **************************************
      * CLIENT INFO INTERFACE IMPLEMENTATION
      ***************************************/

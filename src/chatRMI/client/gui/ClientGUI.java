@@ -34,6 +34,11 @@ public class ClientGUI extends ClientAbstract {
     }
 
     @Override
+    public boolean isLoggedIn() throws RemoteException {
+        return logged_in;
+    }
+
+    @Override
     public void loginCallback(boolean status, List<Message> history) throws RemoteException {
         super.loginCallback(status, history);
 
