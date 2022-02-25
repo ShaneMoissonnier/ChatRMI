@@ -15,6 +15,10 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
 
 ## Architecture/Implementation
 
+<p align="center">
+  <img src="/assets/images/UML_chat.png" />
+</p>
+
 > - ### Client
 >   - contains ?
 
