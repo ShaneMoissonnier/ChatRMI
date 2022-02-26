@@ -59,9 +59,15 @@ public class Message implements Serializable {
         String message;
 
         switch (this.m_messageType){
-            case APPLICATION -> message = "<b style=\"color:#bce6bf;\">[ " + this.getAuthor() + " ]</b> : " + this.getContent();
-            case ERROR -> message = "<b style=\"color:red;\">" + this.getAuthor() + "</b> : " + this.getContent();
-            default -> message = "<b>" + this.getAuthor() + "</b> : " + this.getContent();
+            case APPLICATION:
+                message = "<b style=\"color:#bce6bf;\">[ " + this.getAuthor() + " ]</b> : " + this.getContent();
+                break;
+            case ERROR:
+                message = "<b style=\"color:red;\">" + this.getAuthor() + "</b> : " + this.getContent();
+                break;
+            default:
+                message = "<b>" + this.getAuthor() + "</b> : " + this.getContent();
+                break;
         }
         return message;
     }
