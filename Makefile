@@ -14,7 +14,8 @@ init:
 run: compile
 	@cd bin/ && jar cvfe ../libs/Client.jar chatRMI.client.Client chatRMI/client/* chatRMI/common/* chatRMI/remoteInterfaces/*
 	@cd bin/ && jar cvfe ../libs/Server.jar chatRMI.server.Server chatRMI/server/* chatRMI/common/* chatRMI/remoteInterfaces/*
-	@cd bin/ && rmiregistry &
+	@echo -e "\nDo not close this window. The RMI registry runs in it (ctrl-c to close)"
+	@cd bin/ && rmiregistry
 
 launch-server:
 	@java -cp bin/:libs/Server.jar chatRMI.server.Server
@@ -31,5 +32,3 @@ compile: $(SOURCES:.%.java=.%.class)
 
 clean:
 	@rm -R -f bin/chatRMI/* libs/Server.jar libs/Client.jar
-	@pkill rmiregistry || true
-	@pkill java || true
