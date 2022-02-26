@@ -37,9 +37,14 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
 1. Compile the source code with the following command:
    
    ```console
-    make
+      make clean
+      make
    ```
-2. Start the RMI registry in the correct folder:
+2. Open a new console and use the following command to launch the server:
    ```console
-    rmiregistry &
+      make launch-server
+   ```
+3. Open a new console and use the following command to launch a client:
+   ```console
+      make launch-client
    ```
