@@ -3,6 +3,7 @@ package chatRMI.common;
 import java.io.Serializable;
 import java.util.Date;
 
+@SuppressWarnings("serial")
 public class Message implements Serializable {
 
     public enum MessageType {

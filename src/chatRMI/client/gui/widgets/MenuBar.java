@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.*;
 
+@SuppressWarnings("serial")
 public class MenuBar extends JMenuBar {
     public MenuBar() {
         JMenu boutonFichier = new JMenu("Fichier");

@@ -15,6 +15,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.logging.Logger;
 
+@SuppressWarnings("serial")
 public abstract class ClientAbstract extends UnicastRemoteObject implements ClientInfo {
     private static Logger logger;
 
@@ -112,8 +113,6 @@ public abstract class ClientAbstract extends UnicastRemoteObject implements Clie
 
     protected abstract void loadHistory(List<Message> history) throws RemoteException;
 
-    public abstract boolean isLoggedIn() throws RemoteException;
-
     /* **************************************
      * CLIENT INFO INTERFACE IMPLEMENTATION
      ***************************************/
@@ -185,6 +184,5 @@ public abstract class ClientAbstract extends UnicastRemoteObject implements Clie
         return this.name;
     }
 
-    @Override
     public void setName(String name) throws RemoteException { this.name = name; }
 }

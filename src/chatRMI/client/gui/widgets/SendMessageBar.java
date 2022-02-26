@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.rmi.RemoteException;
 
+@SuppressWarnings("serial")
 public class SendMessageBar extends JPanel{
     private final JTextField m_sendBar;
     private Action m_textFieldEnterAction;
@@ -24,7 +25,7 @@ public class SendMessageBar extends JPanel{
 
         this.setPreferredSize(new Dimension(getWidth(), 60));
         this.add(m_sendBar, BorderLayout.CENTER);
-        this.add(new SendButtons(this, client), BorderLayout.EAST);
+        this.add(new SendButtons(this), BorderLayout.EAST);
     }
 
     public void setupTextFieldEnterAction(ClientGUI client) {

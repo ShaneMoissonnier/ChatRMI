@@ -10,6 +10,7 @@ import chatRMI.remoteInterfaces.ClientInfo;
 import java.rmi.RemoteException;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class ClientGUI extends ClientAbstract {
     private boolean loggedIn;
 
@@ -32,7 +33,6 @@ public class ClientGUI extends ClientAbstract {
         }
     }
 
-    @Override
     public boolean isLoggedIn() throws RemoteException {
         return loggedIn;
     }

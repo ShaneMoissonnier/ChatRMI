@@ -9,6 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 
+@SuppressWarnings("serial")
 public class ConnectionButtons extends JPanel implements ActionListener {
     private final ClientGUI client;
 

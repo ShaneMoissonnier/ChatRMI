@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Vector;
 import java.util.logging.Logger;
 
+@SuppressWarnings("serial")
 public class ChatServiceImpl extends UnicastRemoteObject implements ChatService {
     private static final Logger logger = Logger.getLogger("chatServer");
 

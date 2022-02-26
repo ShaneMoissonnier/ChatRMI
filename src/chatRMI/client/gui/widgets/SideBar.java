@@ -9,6 +9,7 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.util.List;
 
+@SuppressWarnings("serial")
 public class SideBar extends JPanel {
     private static DefaultListModel<String> model;
 

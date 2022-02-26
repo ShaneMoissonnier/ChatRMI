@@ -7,16 +7,14 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
+@SuppressWarnings("serial")
 public class ClientConsole extends ClientAbstract implements Runnable {
-    private boolean logged_in;
-
     public ClientConsole(String host, String name) throws RemoteException {
         super(host, name);
 
-        logged_in = false;
-
         this.login();
         this.run();
+        System.exit(0); /* The shutdown hook takes care of cleanly logging out of the server */
     }
 
     @Override
@@ -52,10 +50,5 @@ public class ClientConsole extends ClientAbstract implements Runnable {
                 }
             }
         }
-    }
-
-    @Override
-    public boolean isLoggedIn() throws RemoteException {
-        return logged_in;
     }
 }

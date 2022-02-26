@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 
+@SuppressWarnings("serial")
 public class ClientFrame extends JFrame {
     private static ClientFrame instance;
 
