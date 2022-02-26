@@ -52,6 +52,7 @@ public class ClientGUI extends ClientAbstract {
     public void otherLoginCallback(ClientInfo other) throws RemoteException {
         super.otherLoginCallback(other);
         SideBar.onOtherLogin(other);
+        ContentPanel.addMessage(new Message(other.getName() + " joined the chat", "Application", Message.MessageType.APPLICATION));
     }
 
     @Override
@@ -70,6 +71,7 @@ public class ClientGUI extends ClientAbstract {
     public void otherLogoutCallback(ClientInfo other) throws RemoteException {
         super.otherLogoutCallback(other);
         SideBar.onOtherLogout(other);
+        ContentPanel.addMessage(new Message(other.getName() + " left the chat", "Application", Message.MessageType.APPLICATION));
     }
 
     @Override
