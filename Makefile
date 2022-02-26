@@ -12,8 +12,15 @@ init:
 	@mkdir -p bin
 
 run: compile
-	@cd bin/chatRMI && jar cvfe ../../libs/Client.jar chatRMI.client.Client client/* common/* remoteInterfaces/*
-	@cd bin/chatRMI && jar cvfe ../../libs/Server.jar chatRMI.server.Server server/* common/* remoteInterfaces/*
+	@cd bin/ && jar cvfe ../libs/Client.jar chatRMI.client.Client chatRMI/client/* chatRMI/common/* chatRMI/remoteInterfaces/*
+	@cd bin/ && jar cvfe ../libs/Server.jar chatRMI.server.Server chatRMI/server/* chatRMI/common/* chatRMI/remoteInterfaces/*
+	@cd bin/chatRMI/ && rmiregistry
+
+launch-server:
+	@java -cp libs/Server.jar chatRMI.server.Server
+
+launch-client:
+	@java -cp libs/Client.jar:libs/flatlaf-2.0.1.jar:libs/flatlaf-intellij-themes-2.0.1.jar chatRMI.client.Client localhost default_name &
 
 compile: $(SOURCES:.%.java=.%.class)
 
@@ -23,4 +30,6 @@ compile: $(SOURCES:.%.java=.%.class)
 	@$(J) -Xlint -sourcepath $(SRC) -cp $(CP) -d $(TARGET) -encoding utf-8 $*.java
 
 clean:
-	@rm -R -f bin/* libs/Server.jar libs/Client.jar
+	@rm -R -f bin/chatRMI/* libs/Server.jar libs/Client.jar
+	@pkill rmiregistry || true
+	@pkill java || true
