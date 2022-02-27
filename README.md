@@ -4,14 +4,13 @@
 	<img src="assets/images/ChatLogo.png" width="200" height="200">
 	<h1>Simple RMI Chat</h1>
 	<p>
-	<h2>A simple centralized chat application based on RMI.</h2>
+	<p>A simple centralized chat application based on RMI.</p>
 	</p>
 	<br>
 </div>
 
 
 ## Showcase
-<br>
 
 <p style="text-align: center">
   <img src="assets/gifs/Demo.gif"  alt="Application demo"/>
@@ -54,14 +53,14 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
 
 ## Instructions
 
-<br>
-
 1. Compile the source code with the following command:
    
    ```console
       make clean
       make
    ```
+   > Do not close this console because rmiregistry execution depends on it.
+
 2. Open a new console and use the following command to launch the server:
    ```console
       make launch-server
@@ -70,3 +69,9 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
    ```console
       make launch-client
    ```
+## Potential future improvements
+
+- A private lounge system can be added by implementing a dynamic list of joinable lounges and the possibility to create new ones.
+- A better password login system for greater reliability and security.
+- A maximum number of users that can connect to the server to regulate the network load.
+- A server side (UI) administration panel to manage the network.
