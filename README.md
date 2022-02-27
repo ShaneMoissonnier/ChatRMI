@@ -1,4 +1,4 @@
-<div style="text-align:center">
+<div align="center">
 	<br>
 	<br>
 	<img src="assets/images/ChatLogo.png" width="200" height="200">
