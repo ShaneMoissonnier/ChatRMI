@@ -11,7 +11,6 @@
 
 
 ## Showcase
----
 <br>
 
 <p style="text-align: center">
@@ -19,12 +18,10 @@
 </p>
 
 ## Description
----
 
 Here is an implementation of a server/client chat model based on RMI. It is a purely centralized chat application.
 
 ## Features
----
 
 - List of users currently logged in.
   
@@ -35,7 +32,7 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
 - User-friendly interface made with Swing 😄.
 
 ## Architecture
----
+
 <br>
 
 <p style="text-align: center">
@@ -56,7 +53,7 @@ Here is an implementation of a server/client chat model based on RMI. It is a pu
 
 
 ## Instructions
----
+
 <br>
 
 1. Compile the source code with the following command:
